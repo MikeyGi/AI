@@ -1,43 +1,39 @@
-#Number of queens
-print ("Enter the number of queens")
-N = int(input())
+N = int(input("Enter the number of queens"))
+queen = 'Q'
+empty = '-'
+board = [[empty]* N for i in range(N)]
 
-#chessboard
-#NxN matrix with all elements 0
-board = [[0]*N for _ in range(N)]
+def isSafe(i, j):
+    for k in range(N):
+        if board[i][k] == queen or board[k][j] == queen:
+            return False
+        
+    for m in range(N):
+        for n in range(N):
+            if i+j == m+n or i-j == m-n:
+                if board[m][n] == queen:
+                    return False
+    return True
 
-def is_attack(i, j):
-    #checking if there is a queen in row or column
-    for k in range(0,N):
-        if board[i][k]==1 or board[k][j]==1:
-            return True
-    #checking diagonals
-    for k in range(0,N):
-        for l in range(0,N):
-            if (k+l==i+j) or (k-l==i-j):
-                if board[k][l]==1:
-                    return True
-    return False
-
-def N_queen(n):
-    #if n is 0, solution found
-    if n==0:
+def nqueen(noq):
+    if(noq==0):
         return True
-    for i in range(0,N):
-        for j in range(0,N):
-            '''checking if we can place a queen here or not
-            queen will not be placed if the place is being attacked
-            or already occupied'''
-            if (not(is_attack(i,j))) and (board[i][j]!=1):
-                board[i][j] = 1
-                #recursion
-                #wether we can put the next queen with this arrangment or not
-                if N_queen(n-1)==True:
+    
+    for i in range(N):
+        for j in range(N):
+            if board[i][j] != queen and isSafe(i,j):
+                board[i][j] = queen
+                if nqueen(noq -1) == True:
                     return True
-                board[i][j] = 0
+                board[i][j] = empty
 
     return False
 
-N_queen(N)
-for i in board:
-    print (i)
+def printBoard(board):
+    for i in board:
+        print(i)
+
+if nqueen(N):
+    printBoard(board)
+else:
+    print("can't place")
